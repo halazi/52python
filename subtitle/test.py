@@ -17,16 +17,19 @@ def main():
     split_data = re.split(r"([0-9\-]+:[0-9\-]+:[0-9\-]+:[0-9\-]+ [0-9\-]+:[0-9\-]+:[0-9\-]+:[0-9\-]+)", in_data)
     out_data = split_data[0].strip()
     for i in range(1, len(split_data), 2):
-        out_data += split_data[i] + "\n"
+        out_data += split_data[i] + "\r\n"
         tmp_data = " ".join(split_data[i+1].split())
-        for j in range(len(tmp_data)-1, -1, -1):
-            if ord(tmp_data[j]) >= 0x4E00 and ord(tmp_data[j]) <= 0x9FFF:
-                if j >= len(tmp_data) - 1 or tmp_data.find(" ", j, len(tmp_data)) == -1:
-                    out_data += tmp_data + "\n\n"
-                    break
-                else:
-                    out_data += tmp_data[0:j+1] + "\n" + tmp_data[j+1:].strip() + "\n"
-                    break
+        if len(tmp_data) > 0:
+            for j in range(len(tmp_data)-1, -1, -1):
+                if ord(tmp_data[j]) >= 0x4E00 and ord(tmp_data[j]) <= 0x9FFF:
+                    if j >= len(tmp_data) - 1 or tmp_data.find(" ", j, len(tmp_data)) == -1:
+                        out_data += tmp_data + "\r\n\r\n"
+                        break
+                    else:
+                        out_data += tmp_data[0:j+1] + "\r\n" + tmp_data[j+1:].strip() + "\r\n"
+                        break
+        else:
+            out_data += "\r\n\r\n"
 
     #print(out_data)
     if len(sys.argv) == 2:
